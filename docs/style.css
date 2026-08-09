@@ -1,0 +1,556 @@
+/* index.html 専用のスタイル */
+/* 並び順は 土台 → 共通部品 → パネル 01-05 → ホバー → 画面幅 */
+/* セレクタもプロパティもアルファベット順。追加するときは既存の並びに挿し込む */
+
+/* 1 か所に切り出せない決まりはここに集約する。値を足すときはこれに合わせること */
+/* - 枠の内側は上下 26px・左右 22px。中身が持つ padding を枠側から差し引いて合計を作る */
+/* - 沈め方は opacity で作る。印が 0.5、補助の文字が 0.55、準備中・休止中が 0.62 */
+/* - 区切りの点線は 1px dashed rgba(160, 182, 255, 0.2) 前後 */
+
+/* フォント */
+@font-face {
+	font-display: swap;
+	font-family: 'HeadUpDaisy';
+	font-style: normal;
+	font-weight: 400;
+	src: url('./fonts/x14y24pxHeadUpDaisy.ttf') format('truetype');
+}
+
+/* ベース */
+a {
+	color: inherit;
+	text-decoration: none;
+}
+body {
+	background:
+		radial-gradient(1.4px 1.4px at 8% 12%, #dce6ff 50%, transparent 51%),
+		radial-gradient(1px 1px at 22% 30%, #b9c8f5 50%, transparent 51%),
+		radial-gradient(1.6px 1.6px at 37% 8%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 52% 22%, #9fb2e8 50%, transparent 51%),
+		radial-gradient(1.3px 1.3px at 68% 6%, #e8eeff 50%, transparent 51%),
+		radial-gradient(1px 1px at 81% 18%, #b9c8f5 50%, transparent 51%),
+		radial-gradient(1.5px 1.5px at 93% 34%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 14% 48%, #8ea3dc 50%, transparent 51%),
+		radial-gradient(1.2px 1.2px at 44% 58%, #cfdaff 50%, transparent 51%),
+		radial-gradient(1px 1px at 74% 66%, #9fb2e8 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 27% 78%, #e8eeff 50%, transparent 51%),
+		radial-gradient(1px 1px at 61% 88%, #b9c8f5 50%, transparent 51%),
+		radial-gradient(1.2px 1.2px at 88% 94%, #dce6ff 50%, transparent 51%),
+		radial-gradient(140% 90% at 50% 0%, #16224a 0%, #070b1a 62%) #070b1a;
+	color: #c6d3f5;
+	font-family: 'HeadUpDaisy', 'JetBrains Mono', ui-monospace, monospace;
+	margin: 0;
+	min-height: 100vh;
+	overflow-x: hidden;
+	position: relative;
+}
+
+/* アニメーション定義 */
+@keyframes coin-blink {
+	0%,
+	64% {
+		opacity: 1;
+	}
+	65%,
+	100% {
+		opacity: 0.22;
+	}
+}
+@keyframes cursor-blink {
+	0%,
+	49% {
+		opacity: 1;
+	}
+	50%,
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes shooting-star {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 0, 0) rotate(-42deg);
+	}
+	9% {
+		opacity: 1;
+	}
+	62% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 0;
+		transform: translate3d(-470px, 425px, 0) rotate(-42deg);
+	}
+}
+@keyframes wip-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.3;
+	}
+}
+
+/* 背景を横切る流れ星 */
+.shooting-star-1 {
+	animation: shooting-star 8s linear infinite;
+	background: linear-gradient(
+		90deg,
+		#f2f6ff,
+		rgba(219, 230, 255, 0.35) 45%,
+		rgba(219, 230, 255, 0)
+	);
+	height: 1.4px;
+	position: absolute;
+	right: 70px;
+	top: 24px;
+	transform-origin: 0 50%;
+	width: 170px;
+	z-index: 1;
+}
+.shooting-star-2 {
+	animation: shooting-star 11s 4.5s linear infinite;
+	background: linear-gradient(90deg, #dbe6ff, rgba(169, 189, 255, 0));
+	height: 1px;
+	opacity: 0;
+	position: absolute;
+	right: 10px;
+	top: 140px;
+	transform-origin: 0 50%;
+	width: 120px;
+	z-index: 1;
+}
+
+/* ターミナル本体 */
+.terminal {
+	box-sizing: border-box;
+	font-size: 15px;
+	margin: 0 auto;
+	max-width: 1120px;
+	padding: 22px 30px 34px;
+	position: relative;
+	width: 100%;
+	z-index: 2;
+}
+
+/* シェルのプロンプト行 */
+/* クラスは 1 要素 1 個なので、共通分は前方一致セレクタでまとめて拾う */
+/* :where() で詳細度を 0 に抑え、個別クラスの上書きを妨げないようにする */
+p:where([class^='prompt']) {
+	font-size: 15px;
+	margin: 24px 0 0;
+}
+.cursor {
+	animation: cursor-blink 1.1s steps(1, end) infinite;
+	background: #c6d3f5;
+	display: inline-block;
+	height: 17px;
+	vertical-align: -2px;
+	width: 8px;
+}
+.prompt-end {
+	margin-top: 26px;
+}
+.prompt-host,
+.prompt-path {
+	opacity: 0.55;
+}
+
+/* 名前と自己紹介 */
+.bio {
+	color: #b4c2e8;
+	font-size: 15px;
+	line-height: 2.1;
+	margin: 22px 0 0;
+	max-width: 62ch;
+}
+.intro {
+	margin-top: 18px;
+}
+.name {
+	color: #eef2ff;
+	font-size: 58px;
+	font-weight: 400;
+	letter-spacing: 0.05em;
+	line-height: 1.12;
+	margin: 14px 0 0;
+	text-shadow: 0 0 26px rgba(169, 189, 255, 0.5);
+}
+
+/* 枠線付きのセクション共通 */
+/* .panel-label は span なので section 限定にして巻き込まないようにする */
+section:where([class^='panel-']) {
+	background: rgba(10, 16, 40, 0.42);
+	border: 1px solid rgba(160, 182, 255, 0.28);
+	padding: 26px 22px;
+	position: relative;
+}
+.panel-label {
+	background: #0a1028;
+	color: #8ea3dc;
+	font-size: 13px;
+	left: 16px;
+	letter-spacing: 0.16em;
+	padding: 0 8px;
+	position: absolute;
+	top: -9px;
+}
+
+/* 各パネルの見出し語。値が完全に同じなのでまとめて持つ */
+.cabinet-name,
+.interest-name,
+.wip-name {
+	color: #eef2ff;
+	font-weight: 500;
+}
+
+/* メーター */
+.meter-empty {
+	color: #3a4877;
+}
+.skill-meter {
+	color: #e6ecff;
+	letter-spacing: 2px;
+}
+
+/* 01 / IN PROGRESS */
+.panel-in-progress {
+	margin-top: 36px;
+}
+.wip-desc {
+	color: #b4c2e8;
+	font-size: 14px;
+	line-height: 1.9;
+	margin: 10px 0 0;
+	padding-left: 22px;
+}
+.wip-dot {
+	animation: wip-pulse 2.4s ease-in-out infinite;
+	color: #a9bdff;
+	font-size: 12px;
+}
+.wip-foot {
+	align-items: baseline;
+	display: flex;
+	font-size: 13px;
+	gap: 12px;
+	margin: 12px 0 0;
+	padding-left: 22px;
+}
+.wip-head {
+	align-items: baseline;
+	display: flex;
+	font-size: 15px;
+	gap: 10px;
+	margin: 0;
+}
+.wip-item {
+	padding: 18px 0;
+}
+.wip-item + .wip-item {
+	border-top: 1px dashed rgba(160, 182, 255, 0.18);
+}
+/* 端の 18px は枠側が持つので、先頭と末尾では落とす */
+.wip-item:first-of-type {
+	padding-top: 0;
+}
+.wip-item:last-of-type {
+	padding-bottom: 0;
+}
+/* 静止状態でもリンクと分かるよう下線を敷く */
+a.wip-name {
+	border-bottom: 1px dashed rgba(160, 182, 255, 0.45);
+}
+.wip-percent {
+	opacity: 0.55;
+}
+.wip-stack {
+	margin-left: auto;
+	opacity: 0.55;
+}
+/* 枠付きの状態ラベル。05 の .cabinet-badge と同じ作りで、右端に寄せない点だけが違う */
+/* 1 クラスにまとめると HTML から意味が読めなくなるので分けたまま。片方を変えたら両方直す */
+.wip-status {
+	border: 1px solid rgba(169, 189, 255, 0.45);
+	color: #a9bdff;
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	padding: 2px 7px;
+}
+
+/* 02 / INTERESTS */
+/* 枠は他のパネルと揃えて全幅のまま、表だけ 600px で止めて .bio と字幅を合わせる */
+.interest-row {
+	align-items: baseline;
+	display: grid;
+	font-size: 14px;
+	gap: 14px;
+	grid-template-columns: 120px 1fr;
+	max-width: 600px;
+	padding: 12px 22px;
+}
+/* 左右と下は表の行が padding を持つぶん、枠側から差し引く */
+.panel-interests {
+	margin-top: 30px;
+	padding: 26px 0 14px;
+}
+.table-header {
+	border-bottom: 1px dashed rgba(160, 182, 255, 0.22);
+	color: #6f83bd;
+	display: grid;
+	font-size: 13px;
+	gap: 14px;
+	grid-template-columns: 120px 1fr;
+	letter-spacing: 0.1em;
+	max-width: 600px;
+	padding: 0 22px 8px;
+}
+
+/* 03 / LOG・04 / ARTICLES の 2 カラム */
+/* 1 行の作りは左右で共通。行の高さは line-height で固定する */
+/* ▸ のような記号は代替フォントで描画されることがあり、放っておくと左右で行高がずれる */
+.article-entry,
+.log-entry {
+	display: flex;
+	font-size: 14px;
+	gap: 14px;
+	line-height: 20px;
+	padding: 7px 4px;
+}
+/* リンクが入るまでの空き行 */
+.article-entry-idle {
+	opacity: 0.62;
+}
+/* 印と種別に色を持たせないのは、ホバーで行ごと反転したとき取り残されるため */
+.article-mark {
+	opacity: 0.5;
+}
+.article-type {
+	margin-left: auto;
+	opacity: 0.55;
+}
+/* 枠の高さは .panel-list で決め打つので、中身に合わせて伸ばさない */
+.bottom-panels {
+	align-items: start;
+	display: grid;
+	gap: 26px;
+	grid-template-columns: 1.15fr 1fr;
+	margin-top: 30px;
+}
+.log-date {
+	opacity: 0.55;
+}
+/* 行が上下 7px・左右 4px を持つぶん、枠側から差し引く */
+.panel-article,
+.panel-log {
+	padding: 19px 18px;
+}
+/* 行 34px（文字 20px + 上下 7px）の 4 つ分で頭打ち。端数を残すと下に余白が出る */
+/* 見出しが枠の外にはみ出しているので、section ではなく内側だけを切り取る */
+.panel-list {
+	height: 136px;
+	overflow-y: auto;
+	scrollbar-color: rgba(160, 182, 255, 0.35) transparent;
+	scrollbar-width: thin;
+}
+
+/* 05 / GAME CENTER */
+/* 筐体が並んだラック。遊べるものだけが光り、空き台は暗いまま置いておく */
+.arcade-coin {
+	color: #ffd9a0;
+}
+.arcade-credit {
+	margin-left: auto;
+	opacity: 0.5;
+}
+.arcade-insert {
+	animation: coin-blink 2.6s steps(1, end) infinite;
+	color: #ffd9a0;
+	letter-spacing: 0.16em;
+}
+.arcade-marquee {
+	align-items: baseline;
+	border-bottom: 1px dashed rgba(160, 182, 255, 0.22);
+	display: flex;
+	font-size: 13px;
+	gap: 10px;
+	margin: 0 0 20px;
+	padding-bottom: 13px;
+}
+.arcade-rack {
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+}
+.panel-arcade {
+	margin-top: 34px;
+}
+
+/* 筐体 1 台 */
+.cabinet {
+	background: rgba(9, 14, 36, 0.5);
+	border: 1px solid rgba(160, 182, 255, 0.2);
+	display: flex;
+	flex-direction: column;
+	transition:
+		border-color 0.18s ease,
+		box-shadow 0.18s ease,
+		transform 0.18s ease;
+}
+/* 01 の .wip-status と同じ作り。違いは右端に寄せることだけ */
+.cabinet-badge {
+	border: 1px solid rgba(169, 189, 255, 0.45);
+	color: #a9bdff;
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	margin-left: auto;
+	padding: 2px 7px;
+}
+.cabinet-badge-idle {
+	border: 1px solid rgba(160, 182, 255, 0.18);
+	color: #6f83bd;
+	font-size: 11px;
+	letter-spacing: 0.12em;
+	margin-left: auto;
+	padding: 2px 7px;
+}
+.cabinet-body {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+	padding: 14px 15px 15px;
+}
+.cabinet-desc {
+	color: #b4c2e8;
+	font-size: 13px;
+	line-height: 1.8;
+}
+.cabinet-foot {
+	display: flex;
+	font-size: 12px;
+	gap: 10px;
+	letter-spacing: 0.08em;
+	opacity: 0.55;
+}
+.cabinet-head {
+	align-items: center;
+	display: flex;
+	gap: 10px;
+}
+.cabinet-idle {
+	opacity: 0.62;
+}
+.cabinet-name {
+	font-size: 15px;
+}
+.cabinet-stack {
+	margin-left: auto;
+}
+
+/* ブラウン管。走査線と内側の落ち込みで画面らしさを出す */
+.cabinet-screen {
+	align-items: center;
+	background:
+		repeating-linear-gradient(
+			rgba(3, 5, 12, 0) 0 2px,
+			rgba(3, 5, 12, 0.26) 2px 4px
+		),
+		radial-gradient(120% 100% at 50% 0%, #16224a 0%, #070b1a 78%);
+	border-bottom: 1px solid rgba(160, 182, 255, 0.16);
+	box-shadow: inset 0 0 22px rgba(3, 5, 12, 0.85);
+	display: flex;
+	height: 108px;
+	justify-content: center;
+	overflow: hidden;
+}
+
+/* 画面の中身は画像を使わず CSS だけで組む */
+/* 空きマスは :where() で詳細度を 0 に落とし、石の 1 クラスで上書きさせる */
+:where(.screen-board) > span {
+	background: #131c43;
+}
+.screen-board {
+	background: #243059;
+	border: 1px solid #3d4a7a;
+	display: grid;
+	gap: 1px;
+	grid-template-columns: repeat(4, 16px);
+	grid-template-rows: repeat(4, 16px);
+}
+.screen-locked {
+	color: #3a4877;
+	font-size: 26px;
+	letter-spacing: 0.16em;
+}
+.stone-black {
+	background: radial-gradient(
+		circle at 50% 50%,
+		#090d1e 0 38%,
+		#8ea3dc 39% 46%,
+		#131c43 47%
+	);
+}
+.stone-white {
+	background: radial-gradient(circle at 50% 50%, #f2f6ff 0 46%, #131c43 47%);
+}
+
+/* 一覧行のホバー。飛べる行だけが反応するよう a に限る */
+a.article-entry:hover,
+.log-entry:hover {
+	background: #a9bdff;
+	color: #070b1a;
+}
+
+/* 遊べる筐体だけ、電源が入ったように反応する */
+a.cabinet:hover {
+	border-color: rgba(169, 189, 255, 0.7);
+	box-shadow: 0 0 24px rgba(102, 125, 200, 0.22);
+	transform: translateY(-2px);
+}
+a.cabinet:hover .cabinet-badge {
+	background: #a9bdff;
+	color: #070b1a;
+}
+a.cabinet:hover .cabinet-screen {
+	box-shadow:
+		inset 0 0 22px rgba(3, 5, 12, 0.85),
+		inset 0 0 30px rgba(169, 189, 255, 0.16);
+}
+
+/* プロジェクト名は行ごと反転させず、文字だけ灯す */
+a.wip-name:hover {
+	border-bottom-color: #a9bdff;
+	color: #a9bdff;
+}
+
+/* 画面が狭いときは下段を 1 カラムに落とす */
+/* 縦に積めば左右を揃える理由がないので、入れ子のスクロールはやめて全部見せる */
+@media (max-width: 900px) {
+	.bottom-panels {
+		grid-template-columns: 1fr;
+	}
+	.panel-list {
+		height: auto;
+	}
+}
+
+/* 横に 2 列並べる余裕がない幅。表とログを縦に積む */
+/* 積んだ表では DESCRIPTION の見出しが宙に浮くので、罫線ごと FIELD だけ残す */
+@media (max-width: 560px) {
+	.interest-row,
+	.table-header {
+		gap: 5px;
+		grid-template-columns: 1fr;
+	}
+	.log-entry {
+		flex-direction: column;
+		gap: 4px;
+	}
+	.table-header > span:last-child {
+		display: none;
+	}
+	.terminal {
+		padding: 22px 18px 34px;
+	}
+}
