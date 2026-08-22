@@ -22,8 +22,8 @@ IS_WEB: bool = sys.platform == "emscripten"
 
 # Quitting in a browser cannot close anything, and stopping the loop
 # would strand the player on a dead canvas. The way out is the page the
-# cabinet was clicked on, two levels up from <site>/games/othello/.
-SITE_URL: str = "../../"
+# cabinet was clicked on, one level up from <site>/games/othello.html.
+SITE_URL: str = "../"
 
 # Frames a transient message stays on screen.
 MESSAGE_FRAMES: int = 100
