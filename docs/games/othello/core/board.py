@@ -43,7 +43,6 @@ class Board:
     SIZE: int = BOARD_SIZE
 
     def __init__(self) -> None:
-        """Initialize the board at the standard starting position."""
         self._state: BoardState = BoardState()
         self._placement: Placement = Placement(self._state)
         self._score_calculator: ScoreCalculator = ScoreCalculator(self._state)
@@ -69,16 +68,10 @@ class Board:
         reaching for the internals.
 
         """
-        # Create new instance with default initialization
         copy_board: Board = cls()
 
-        # Copy board state using public interface
-        original_board_data: list[list[int]] = original.board
-        for row in range(copy_board.size):
-            for col in range(copy_board.size):
-                copy_board._state.set_cell_value(row, col, original_board_data[row][col])
-
-        # Copy the current player state directly
+        black, white = original.bitboards()
+        copy_board._state.set_bitboards(black, white)
         copy_board._game_manager.set_current_player(original.current_player)
 
         return copy_board
@@ -119,6 +112,36 @@ class Board:
     def current_player(self, player: int) -> None:
         """Set the current player."""
         self._game_manager.set_current_player(player)
+
+    def bitboards(self) -> tuple[int, int]:
+        """Get the stones as bitboards.
+
+        Returns
+        -------
+        tuple[int, int]
+            The stones as (black, white), one bit per square, with the
+            bit for ``(row, col)`` at ``1 << (row * SIZE + col)``.
+
+        Notes
+        -----
+        Published so that a search can read a position in the form it
+        actually computes on, without unpacking :attr:`board` into a
+        grid and packing it back again.
+
+        """
+        return self._state.bitboards()
+
+    def count_empty(self) -> int:
+        """Count the squares still free.
+
+        Returns
+        -------
+        int
+            The number of empty squares, which is how far the game has
+            left to run.
+
+        """
+        return self._state.count_empty()
 
     def create_snapshot(self) -> dict[str, Any]:
         """Create a snapshot of the current board state for restoration.

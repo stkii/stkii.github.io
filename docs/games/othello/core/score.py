@@ -12,7 +12,6 @@ class ScoreCalculator:
     """
 
     def __init__(self, state: BoardState) -> None:
-        """Initialize the score calculator."""
         self._state: BoardState = state
 
     def get_score(self) -> tuple[int, int]:
@@ -41,9 +40,9 @@ class ScoreCalculator:
 
         if black_stones_count > white_stones_count:
             return Cell.FIRST_PLAYER.value
-        # Using `elif` here improves clarity by making mutual
-        # exclusivity explicit.
+        # `elif` over an early return, so the mutual exclusivity of the
+        # three outcomes is visible in the shape of the branch.
         elif white_stones_count > black_stones_count:  # noqa: RET505
             return Cell.SECONT_PLAYER.value
         else:
-            return Cell.EMPTY_CELL.value  # Tie game
+            return Cell.EMPTY_CELL.value

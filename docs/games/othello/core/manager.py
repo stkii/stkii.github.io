@@ -22,54 +22,9 @@ class GameManager:
         placement: Placement,
         state: BoardState,
     ) -> None:
-        """Initialize the game manager."""
-        # The black player goes first
         self._current_player: int = Cell.FIRST_PLAYER.value
         self._placement: Placement = placement
         self._state: BoardState = state
-
-    def _flip_stones_in_direction(
-        self,
-        start_row: int,
-        start_col: int,
-        row_direction: int,
-        col_direction: int,
-        current_player: int,
-    ) -> None:
-        """Flip the captured stones along one direction.
-
-        Parameters
-        ----------
-        start_row : int
-            The row of the newly placed stone
-        start_col : int
-            The column of the newly placed stone
-        row_direction : int
-            The row step to walk in (-1, 0, or 1)
-        col_direction : int
-            The column step to walk in (-1, 0, or 1)
-        current_player : int
-            The player who placed the stone
-
-        """
-        opponent_player: int = get_opponent_player(current_player)
-        check_row: int = start_row + row_direction
-        check_col: int = start_col + col_direction
-
-        # Flip opponent stones until reaching current player's stone
-        while self._state.is_within_board(check_row, check_col):
-            cell_value: int = self._state.get_cell_value(check_row, check_col)
-            if cell_value == opponent_player:
-                self._state.set_cell_value(check_row, check_col, current_player)
-                check_row += row_direction
-                check_col += col_direction
-            elif cell_value == current_player:
-                # Reached current player's stone, stop flipping
-                break
-            else:
-                # Empty cell: should not occur when
-                # can_flip_in_direction returned True
-                break
 
     def _switch_to_next_player(self, previous_player: int) -> None:
         """Hand the turn on, passing or ending the game as needed.
@@ -88,9 +43,9 @@ class GameManager:
         next_player: int = get_opponent_player(previous_player)
         self._current_player = next_player
 
-        if not self._placement.get_valid_placements(next_player):
+        if not self._placement.has_valid_placement(next_player):
             self._current_player = previous_player
-            if not self._placement.get_valid_placements(previous_player):
+            if not self._placement.has_valid_placement(previous_player):
                 self._current_player = Cell.EMPTY_CELL.value
 
     @property
@@ -142,53 +97,26 @@ class GameManager:
         bool
             True when the move was played, False when it was invalid.
 
+        Notes
+        -----
+        Validating the move already works out which stones it captures,
+        so the placement and the flips are applied together rather than
+        walking the eight directions a second time.
+
         """
         if current_player is None:
             current_player = self._current_player
 
-        if not self._placement.is_valid_placement(
+        captured: int = self._placement.get_captures(
             target_row=target_row,
             target_col=target_col,
             current_player=current_player,
-        ):
+        )
+        if not captured:
             return False
 
-        # Place the stone
-        self._state.set_cell_value(
-            row=target_row,
-            col=target_col,
-            value=current_player,
-        )
-
-        # Flip stones in all valid directions
-        directions: list[tuple[int, int]] = [
-            (-1, -1),
-            (-1, 0),
-            (-1, 1),
-            (0, -1),
-            (0, 1),
-            (1, -1),
-            (1, 0),
-            (1, 1),
-        ]
-
-        for row_direction, col_direction in directions:
-            if self._placement.can_flip_in_direction(
-                target_row,
-                target_col,
-                row_direction,
-                col_direction,
-                current_player,
-            ):
-                self._flip_stones_in_direction(
-                    target_row,
-                    target_col,
-                    row_direction,
-                    col_direction,
-                    current_player,
-                )
-
-        # Switch to next player
+        square: int = 1 << (target_row * self._state.size + target_col)
+        self._state.apply_move(current_player, square, captured)
         self._switch_to_next_player(current_player)
 
         return True
