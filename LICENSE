@@ -1,0 +1,10 @@
+Copyright (c) 2026 stkii
+
+このリポジトリに含まれる文章、HTML、CSS、デザイン、その他のコンテンツは著作権法によって保護されています。
+以下に定める例外を除き、無断での複製・改変・再配布を禁じます。
+
+1. docs/fonts/x14y24pxHeadUpDaisy.ttf
+x14y24pxHeadUpDaisy.ttf は 患者長ひっく (hicc) 氏が著作権を有するフォントであり、上記の著作権表示は及びません。利用条件は docs/fonts/LICENSE を参照してください。
+
+2. docs/games/othello.html
+pyxel app2html によって生成されたファイルで、Pyxel (MIT License, Copyright (c) 2018-2026 Takashi Kitao) に由来するコードを含みます。
