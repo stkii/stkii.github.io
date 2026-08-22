@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>stkii</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <div class="shooting-star-1"></div>
+    <div class="shooting-star-2"></div>
+
+    <main class="terminal">
+      <p class="prompt"><span class="prompt-host">stkii@entry</span>:<span class="prompt-path">~</span>$ cat whoami.txt</p>
+
+      <section class="intro">
+        <h2 class="name">stkii</h2>
+        <p class="bio">
+          BA in Psychology. Interested in math, stats and programming.
+        </p>
+      </section>
+
+      <!-- Section-01: IN PROGRESS -->
+      <section class="panel-in-progress">
+        <span class="panel-label">01 / IN PROGRESS</span>
+
+        <article class="wip-item">
+          <p class="wip-head">
+            <span class="wip-dot">●</span><a class="wip-name" href="https://github.com/stkii/sai">SAI</a><span class="wip-status">BETA</span>
+          </p>
+          <p class="wip-desc">
+            GUI-based analysis software designed for psychological research.
+          </p>
+          <p class="wip-foot">
+            <span class="skill-meter">✦✦✦✦<span class="meter-empty">✦✦</span></span><span class="wip-percent">60%</span><span class="wip-stack">TypeScript / Rust / R</span>
+          </p>
+        </article>
+
+        <article class="wip-item">
+          <p class="wip-head">
+            <span class="wip-dot">●</span><a class="wip-name" href="https://github.com/stkii/binary">binary</a><span class="wip-status">WIP</span>
+          </p>
+          <p class="wip-desc">
+            An app where you can create characters tailored to your preferences, enjoy conversations, work together on tasks, and share your thoughts, concerns, and personal challenges.
+          </p>
+          <p class="wip-foot">
+            <span class="skill-meter">✦✦<span class="meter-empty">✦✦✦✦</span></span><span class="wip-percent">45%</span><span class="wip-stack">TypeScript / Rust</span>
+          </p>
+        </article>
+      </section>
+
+      <!-- Section 2 and 3 -->
+      <div class="bottom-panels">
+        <section class="panel-log">
+          <span class="panel-label">02 / LOG</span>
+          <div class="panel-list">
+            <a class="log-entry" href="https://github.com/stkii/sai/releases"><span class="log-date">2026-08-10</span><span>Pre-released SAI beta (v0.1.0-beta)</span></a>
+          </div>
+        </section>
+
+        <section class="panel-article">
+          <span class="panel-label">03 / ARTICLES</span>
+          <div class="panel-list">
+            <!-- リンクを貼るときは div ごと差し替える -->
+            <!-- <a class="article-entry" href="URL"><span class="article-mark">▸</span><span>タイトル</span><span class="article-type">ZENN</span></a> -->
+            <a class="article-entry" href="https://note.com/stkii/n/n042fb055d0e3"><span class="article-mark">▸</span><span>What Is Attachment?</span><span class="article-type">psychology / note</span></a>
+            <div class="article-entry article-entry-idle"><span class="article-mark">▸</span><span>no signal</span><span class="article-type">SOON</span></div>
+            <div class="article-entry article-entry-idle"><span class="article-mark">▸</span><span>no signal</span><span class="article-type">SOON</span></div>
+            <div class="article-entry article-entry-idle"><span class="article-mark">▸</span><span>no signal</span><span class="article-type">SOON</span></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Section-04: GAME CENTER -->
+      <section class="panel-arcade">
+        <span class="panel-label">04 / GAME CENTER</span>
+
+        <p class="arcade-marquee">
+          <span class="arcade-coin">◆</span><span class="arcade-insert">INSERT COIN</span><span class="arcade-credit">CREDIT 496</span>
+        </p>
+
+        <div class="arcade-rack">
+          <a class="cabinet" href="./games/othello.html">
+            <span class="cabinet-screen">
+              <span class="screen-board">
+                <span></span><span></span><span></span><span></span>
+                <span></span><span class="stone-white"></span><span class="stone-black"></span><span></span>
+                <span></span><span class="stone-black"></span><span class="stone-white"></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </span>
+            </span>
+            <span class="cabinet-body">
+              <span class="cabinet-head"><span class="cabinet-name">othello</span><span class="cabinet-badge">PLAY</span></span>
+              <span class="cabinet-desc">A two-player zero-sum finite deterministic perfect-information game where players place discs on an 8×8 board to flip the opponent's, and whoever has more at the end wins.</span>
+              <span class="cabinet-foot"><span>MOUSE</span><span class="cabinet-stack">Python / Pyxel</span></span>
+            </span>
+          </a>
+
+          <article class="cabinet cabinet-idle">
+            <span class="cabinet-screen">
+              <span class="screen-locked">???</span>
+            </span>
+            <span class="cabinet-body">
+              <span class="cabinet-head"><span class="cabinet-name">no signal</span><span class="cabinet-badge-idle">LOCKED</span></span>
+              <span class="cabinet-desc">---</span>
+              <span class="cabinet-foot"><span>-</span><span class="cabinet-stack">-</span></span>
+            </span>
+          </article>
+
+          <article class="cabinet cabinet-idle">
+            <span class="cabinet-screen">
+              <span class="screen-locked">???</span>
+            </span>
+            <span class="cabinet-body">
+              <span class="cabinet-head"><span class="cabinet-name">no signal</span><span class="cabinet-badge-idle">LOCKED</span></span>
+              <span class="cabinet-desc">---</span>
+              <span class="cabinet-foot"><span>-</span><span class="cabinet-stack">-</span></span>
+            </span>
+          </article>
+        </div>
+      </section>
+
+      <p class="prompt-end"><span class="prompt-host">stkii@entry</span>:<span class="prompt-path">~</span>$ <span class="cursor"></span></p>
+    </main>
+  </body>
+</html>
